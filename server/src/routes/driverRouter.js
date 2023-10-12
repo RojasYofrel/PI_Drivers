@@ -6,7 +6,7 @@ const driverRouter = Router();
 
 driverRouter.get('/',getDriversHandler)
 
-driverRouter.get('/:idDriver',getDetailHandler)
+driverRouter.get('/:id',getDetailHandler)
 
 driverRouter.post('/',postDriverHandler)
 
