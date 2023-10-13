@@ -1,69 +1,36 @@
-const { drivers } = require('../../api/db.json');
 const axios = require('axios');
+const Driver = require('../models/Driver');
 
-// // Función para filtrar conductores por nombre
-// function filterDriversByName(name) {
-//   return drivers.filter(driver => driver.driverRef === name);
-// }
-
-// // Función para obtener todos los conductores
-// function getAllDrivers() {
-//   return drivers;
-// }
-
-const { Driver, Team } = require('../db'); // Asegúrate de importar los modelos de la base de datos
-
-async function detailDriverFromDB(id) {
+const getAllDrivers = async () => {
   try {
-    // Utiliza el modelo Driver para buscar un conductor por su ID
-    const driver = await Driver.findByPk(id, {
-      include: Team, // Incluye los equipos asociados al conductor
-    });
+    const response = await axios('http://localhost:5000/drivers'); 
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
 
-    if (!driver) {
-      return null; // Devuelve null si el conductor no se encuentra en la base de datos
-    }
-
-    // Formatea los detalles del conductor como desees
-    const detail = {
-      id: driver.id,
-      name: `${driver.Nombre} ${driver.Apellido}`,
-      team: driver.Teams.map((team) => team.Nombre), // Obtiene el nombre de los equipos
-      // Agrega más propiedades aquí si es necesario
-    };
-
+const getDetailDriver = async (id,optionSearch)=>{
+  try {
+    if(optionSearch==='API'){
+      const response = await axios(`http://localhost:5000/drivers/${id}`);
+      const {data} = response;
+      const detail = {
+        Nombre: `${data.name.surname} ${data.name.forename}`,
+        Team: data.teams,
+      }
     return detail;
+    }else if (optionSearch==='bbd'){
+      Driver.findByPk(id);
+    }
+    
   } catch (error) {
     throw error;
+
   }
 }
-
-// Función para obtener todos los conductores desde la API
-async function getAllDrivers() {
-  try {
-    const response = await axios.get('http://localhost:5000/drivers');
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-}
-
-async function detailDriver(id){
-  try {
-    const response = await axios.get(`http://localhost:5000/drivers/${id}`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-}
-
-
-
-
 
 module.exports = {
   getAllDrivers,
-  detailDriver,
-  detailDriverFromDB,
+  getDetailDriver,
 };
-
