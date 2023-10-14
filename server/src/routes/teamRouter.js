@@ -1,5 +1,5 @@
-const {Router}= require('express');
-const getTeamsHandler = require('../handlers/teamHandler');
+const { Router }= require('express');
+const { getTeamsHandler } = require('../handlers/teamHandler');
 
 const teamRouter = Router();
 
