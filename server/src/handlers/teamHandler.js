@@ -11,7 +11,7 @@ const getTeamsHandler = async (req,res)=>{
         if(teamsCount===0){
 
             const allTeams = await getTeamsFromAPI();
-            console.log(allTeams);
+            // console.log(allTeams);
             res.status(200).json(allTeams)
         }else{
             res.status(200).json({message: 'ya estaban cargados en la BDD'});

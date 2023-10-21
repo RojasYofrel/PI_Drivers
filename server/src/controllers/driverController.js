@@ -43,7 +43,7 @@ const getDetailDriver = async (id,optionSearch)=>{
   }
 }
 
-const createDriver = async (nombre, apellido, descripcion, nacionalidad, bod, teams)=>{
+const createDriver = async (nombre, apellido, descripcion, nacionalidad, bod, team)=>{
   try {
     // console.log('name:', nombre);
     // console.log('apellido:', apellido);
@@ -56,20 +56,16 @@ const createDriver = async (nombre, apellido, descripcion, nacionalidad, bod, te
       Nacionalidad: nacionalidad,
       Fecha_de_nacimiento: bod,
     })
-    // console.log(eldriver);
-    if (teams) {
-      console.log('Inside teams check');
-      const teamsArray = teams.split(',').map(team => team.trim());
-      console.log('teamsArray:', teamsArray);
     
-      console.log('Before database team lookup');
-      const teamsAssociate = await Team.findAll({
-        where: { Nombre: teamsArray }
-      });
-      console.log('teamsAssociate:', teamsAssociate);
+    if (team && team.length > 0) {
+      const teamsArray = team.split(',').map(team => team.trim()); // Divide la cadena en un arreglo de equipos y quita espacios en blanco
     
-      console.log('Before adding teams to driver');
-      await Driver.addTeams(teamsAssociate);
+      // Realiza una búsqueda para cada nombre de equipo en teamsArray
+      const teamsAssociate = await Promise.all(teamsArray.map(teamName => {
+        return Team.findOne({ where: { Nombre: teamName } });
+      }));
+    
+      await eldriver.setTeams(teamsAssociate);
     }
     return eldriver;
 

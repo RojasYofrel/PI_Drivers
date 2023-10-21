@@ -21,9 +21,10 @@ const getTeamsFromAPI = async () => {
         Nombre: teamName,
     }))
     console.log(teamForBDD);
+    console.log(filterTeams);
     await Team.bulkCreate(teamForBDD);
 
-    return teamForBDD;
+    return filterTeams;
   } catch (error) {
     throw error;
   }
